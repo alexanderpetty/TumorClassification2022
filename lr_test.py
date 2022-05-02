@@ -101,36 +101,6 @@ img_grid = torchvision.utils.make_grid(images)
 matplotlib_imshow(img_grid, one_channel=True)
 
 
-# TESTING LOOP
-
-def test(model,testloader):
-    with torch.no_grad():
-        n_correct=0
-        n_samples=0
-        y_pred=[]
-        y_actual=[]
-        for i,(images,labels) in enumerate(testloader):
-            images=images.to(device)
-            labels=labels.to(device)
-            
-            outputs=model(images)
-            
-            y_actual+=list(np.array(labels.detach().to('cuda')).flatten())
-        # value ,index
-            _,predictes=torch.max(outputs,1)
-            y_pred+=list(np.array(predictes.detach().to('cuda')).flatten())
-        # number of samples in current batch
-            n_samples+=labels.shape[0]
-
-            n_correct+= (predictes==labels).sum().item()
-
-        y_actual=np.array(y_actual).flatten()
-        y_pred=np.array(y_pred).flatten()
-        print(np.unique(y_pred))
-        acc = classification_report(y_actual,y_pred,target_names=train_dset.classes)
-        print(f"{acc}")
-
-
 # TRAINING LOOP
         
 def train(model,train_loader,criterion,optimizer,val_loader,epochs=25):    
